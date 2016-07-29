@@ -51,6 +51,14 @@ module ActiveAdminImport
       @import_options ||= options.slice(:validate, :on_duplicate_key_update, :ignore, :timestamps, :batch_transaction)
     end
 
+    def batch_insert(header_key, values)
+      header_index = header_index(header_key)
+      csv_lines.map!.with_index do |line, index|
+        line[header_index] = values[index]
+        line
+      end
+    end
+
     def batch_replace(header_key, options)
       index = header_index(header_key)
       csv_lines.map! do |line|
